@@ -15,8 +15,8 @@ type Server struct {
 
 // Ratios struct with ratios values
 type Ratios struct {
-	CashBalance    uint `envconfig:"CASH_BALANCE_RATIO" default:"3"`
-	MonthlyRevenue uint `envconfig:"MONTHLY_REVENUE_RATIO" default:"5"`
+	CashBalance    float64 `envconfig:"CASH_BALANCE_RATIO" default:"3"`
+	MonthlyRevenue float64 `envconfig:"MONTHLY_REVENUE_RATIO" default:"5"`
 }
 
 // Environment struct with the environment values
@@ -26,15 +26,12 @@ type Environment struct {
 }
 
 // LoadEnvironment loads a .env file and set the environment variables
-func LoadEnvironment() {
+func LoadEnvironment() *Environment {
 	err := godotenv.Load()
 	if err != nil {
 		log.Println("config file not found")
 	}
-}
 
-// Retrieve retrieves the environment variables
-func Retrieve() *Environment {
 	conf := new(Environment)
 	envconfig.Process("", conf)
 	return conf

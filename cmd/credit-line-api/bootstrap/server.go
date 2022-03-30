@@ -16,20 +16,22 @@ import (
 // server represents the server of the application
 type server struct {
 	router http.Handler
+	Srv    *env.Server
 }
 
 // newServer create a new pointer of the server struct
-func newServer(router http.Handler) *server {
+func newServer(router http.Handler, srv *env.Server) *server {
 	return &server{
 		router: router,
+		Srv:    srv,
 	}
 }
 
 // up starts the HTTP server
 func (s *server) up() error {
 
-	srvPort := env.Retrieve().Server.Port
-	srvShutdownTimeOut := env.Retrieve().Server.ShutdownTimeOut
+	srvPort := s.Srv.Port
+	srvShutdownTimeOut := s.Srv.ShutdownTimeOut
 
 	srvErr := make(chan error, 1)
 	srvShutdown := make(chan os.Signal, 1)
