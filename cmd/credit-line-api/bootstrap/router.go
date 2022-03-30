@@ -3,17 +3,20 @@ package bootstrap
 import (
 	"net/http"
 
+	pv "github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+
+	"credit-line/internal/controller"
+	"credit-line/pkg/validator"
 )
 
 // newEchoRouter builds an instance of the echo router
-func newEchoRouter() http.Handler {
+func newEchoRouter(clh *controller.CreditLineHandler) http.Handler {
 	e := echo.New()
+	e.Validator = validator.New(pv.New())
 
 	products := e.Group("/api/v1/credits")
-	products.GET("", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, "Hello world")
-	})
+	products.GET("/calculate/limit", clh.CreditLine)
 
 	return e
 }

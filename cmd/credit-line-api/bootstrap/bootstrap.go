@@ -3,16 +3,23 @@ package bootstrap
 import (
 	"fmt"
 
+	"credit-line/internal/calculator"
+	"credit-line/internal/controller"
+	"credit-line/internal/service"
 	"credit-line/pkg/env"
 )
 
 // Run retrieves the environment, init the database, builds the server router and starts the server
 func Run() error {
-	env.LoadEnvironment()
+	conf := env.LoadEnvironment()
 
-	router := newEchoRouter()
+	creditLimitCalculator := calculator.NewCreditLine(conf.Ratio)
+	creditLimitService := service.NewCreditLine(creditLimitCalculator)
+	creditLimitRouter := controller.NewCreditLineHandler(creditLimitService)
 
-	srv := newServer(router)
+	router := newEchoRouter(creditLimitRouter)
+
+	srv := newServer(router, conf.Server)
 	err := srv.up()
 	if err != nil {
 		return fmt.Errorf("failed to init server, %v", err)
