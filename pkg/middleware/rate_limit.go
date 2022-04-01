@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -30,7 +29,6 @@ func IpRateLimitByTime() echo.MiddlewareFunc {
 		return func(c echo.Context) (err error) {
 			ip := c.RealIP()
 			limiterCtx, err := ipRateLimiter.Get(c.Request().Context(), ip)
-			fmt.Println("By time:", cacheRequest.CurrentCreditStatus)
 			if cacheRequest.CurrentCreditStatus == string(model.Approved) {
 				if err != nil {
 					log.Printf("IpRateLimitByTime err: %v, %s on %s", err, ip, c.Request().URL)
