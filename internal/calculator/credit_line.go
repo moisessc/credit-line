@@ -1,6 +1,7 @@
 package calculator
 
 import (
+	"context"
 	"credit-line/pkg/env"
 	"credit-line/pkg/errors"
 )
@@ -14,7 +15,7 @@ const (
 
 // CreditLineCalculator calculator contracts for the credit line
 type CreditLineCalculator interface {
-	CalculateCreditLine(foundingType string, cashBalance, monthlyRevenue float64) (float64, error)
+	CalculateCreditLine(ctx context.Context, foundingType string, cashBalance, monthlyRevenue float64) (float64, error)
 }
 
 // creditLine struct that implement the CreditLineCalculator interface
@@ -30,7 +31,7 @@ func NewCreditLine(ratios *env.Ratios) *creditLine {
 }
 
 // CalculateCreditLine implement the interface CreditLineCalculator.CalculateCreditLine
-func (cl *creditLine) CalculateCreditLine(foundingType string, cashBalance, monthlyRevenue float64) (float64, error) {
+func (cl *creditLine) CalculateCreditLine(ctx context.Context, foundingType string, cashBalance, monthlyRevenue float64) (float64, error) {
 	switch foundingType {
 	case SME_FOUNDING_TYPE:
 		amount := cashBalance / cl.ratios.CashBalance

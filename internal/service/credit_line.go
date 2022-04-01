@@ -28,7 +28,7 @@ func NewCreditLine(calculator calculator.CreditLineCalculator) *creditLine {
 
 // DetermineCreditLimit implement the interface CreditLineService.DetermineCreditLimit
 func (cl *creditLine) DetermineCreditLimit(ctx context.Context, ip string, creditLine *model.CreditLine) (*model.CreditLineResponse, error) {
-	amount, err := cl.calculator.CalculateCreditLine(creditLine.FoundingType(), creditLine.CashBalance(), creditLine.MonthlyRevenue())
+	amount, err := cl.calculator.CalculateCreditLine(ctx, creditLine.FoundingType(), creditLine.CashBalance(), creditLine.MonthlyRevenue())
 	if err != nil {
 		return nil, fmt.Errorf("determination failed: %w", err)
 	}
