@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"credit-line/internal/controller"
+	"credit-line/pkg/middleware"
 	"credit-line/pkg/validator"
 )
 
@@ -16,7 +17,8 @@ func newEchoRouter(clh *controller.CreditLineHandler) http.Handler {
 	e.Validator = validator.New(pv.New())
 
 	products := e.Group("/api/v1/credits")
-	products.GET("/calculate/limit", clh.CreditLine)
+	products.GET("/calculate/limit",
+		clh.CreditLine, middleware.ValidateRetries(), middleware.IpRateLimitByTime(), middleware.IpRateLimitByFail())
 
 	return e
 }

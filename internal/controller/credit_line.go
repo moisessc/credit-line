@@ -48,7 +48,7 @@ func (clh *CreditLineHandler) CreditLine(c echo.Context) error {
 	creditLine := model.NewCreditLine(request.FoundingType, request.RequestedDate,
 		request.CashBalance, request.MonthlyRevenue, request.RequestedCreditLine)
 
-	creditLineResponse, err := clh.service.DetermineCreditLimit(c.Request().Context(), creditLine)
+	creditLineResponse, err := clh.service.DetermineCreditLimit(c.Request().Context(), c.RealIP(), creditLine)
 	if err != nil {
 		errResponse, code := errors.MapError(err, errors.DomainErr)
 		return c.JSON(code, errResponse)
